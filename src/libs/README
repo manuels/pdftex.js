@@ -1,0 +1,37 @@
+$Id: README 17641 2010-03-31 11:36:18Z peter $
+Public domain.  Originally created by Karl Berry, 2005.
+
+Libraries we compile for TeX Live.
+
+All libraries except obsdcompat use the original source tree with all
+modifications maintained as patches and use a proxy build system, either
+bypassing or using the original one.
+
+See also comments in ../texk/README.
+
+freetype 1.5 - ?
+
+freetype2 2.3.11 - http://savannah.nongnu.org/download/freetype/
+
+gd 2.0.35 - http://www.libgd.org/releases/
+
+graphite 2.3.1 - the directory silgraphite-2.3.1/engine/ from
+  http://sourceforge.net/projects/silgraphite/
+
+icu 4.4 - http://download.icu-project.org/files/icu4c/
+  with modifications required for xetex, also used by bibtexu
+
+libpng 1.2.40 - http://www.libpng.org/ - used by many
+
+obsdcompat - used by pdftex and luatex
+
+t1lib 5.1.2 - ftp://sunsite.unc.edu/pub/Linux/libs/graphics/
+
+teckit 2.5.1 - http://scripts.sil.org/svn-view/teckit/
+
+xpdf 3.02pl4 - http://www.foolabs.com/xpdf/
+  with modifications for pdftex, luatex, and xetex
+
+zlib 1.2.3 - http://www.zlib.net/ - used by many
+
+zziplib 0.13.58 - http://zziplib.sourceforge.net/ - used by luatex

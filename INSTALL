@@ -1,0 +1,34 @@
+pdfTeX
+======
+
+INSTALL for pdfTeX 1.40.11
+==========================
+
+Try the script build-pdftex.sh in this directory:
+
+,--------
+| bash ./build-pdftex.sh
+`--------
+
+If it succeeds, you should end up with the file pdftex in
+build-pdftex/texk/web2c
+
+If you want to build pdftex in a directory out of the src tree:
+
+,--------
+| cd /tmp
+| bash /path/to/build-pdftex.sh
+`--------
+
+This distribution is a stripped-down version of the TeXlive distribution.
+All source code is in the directory src. The code of pdfTeX is in
+src/texk/web2c/pdftexdir
+
+If you are using a TeX distribution older than 2005 (e.g. teTeX 2.x), please
+first update your complete TeX installation.
+
+Replace the so-named files in your TeX installation with these and regenerate
+all formats of your TeX installation (e.g. with "fmtutil --refresh").
+
+If all else fails, follow the clues in README, src/texk/INSTALL and
+src/texk/web2c/INSTALL.

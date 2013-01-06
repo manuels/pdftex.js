@@ -1,0 +1,200 @@
+## Makefile.am for the TeX Live subdirectory texk/web2c/
+##
+## Copyright (C) 2009, 2010 Peter Breitenlohner <tex-live@tug.org>
+## You may freely use, modify and/or distribute this file.
+##
+ACLOCAL_AMFLAGS = -I ../../m4 -I m4
+
+INCLUDES =
+AM_CPPFLAGS = $(KPATHSEA_INCLUDES)
+## Not yet for C, C++, and ObjC++ (too many warnings or not yet implemented)
+AM_CFLAGS = $(WARNING_CFLAGS)
+AM_CXXFLAGS = ## $(WARNING_CXXFLAGS)
+## Not yet for ObjC++ (not yet implemented)
+AM_OBJCXXFLAGS = ## $(WARNING_OBJCXXFLAGS)
+
+version = $(WEB2CVERSION)
+
+SUBDIRS = doc lib man web2c . window omegafonts otps
+
+proglib = lib/lib.a
+
+## Below we will add to these
+EXTRA_PROGRAMS =
+bin_PROGRAMS =
+noinst_PROGRAMS =
+dist_man_MANS =
+nodist_man_MANS =
+check_PROGRAMS =
+TESTS =
+EXTRA_LIBRARIES =
+EXTRA_DIST = PROJECTS cftests cpascal.h help.h w2c/config.h
+DISTCLEANFILES = $(EXTRA_LIBRARIES)
+CLEANFILES =
+TRIPTRAP =
+
+# in case of an SVN repository
+dist-hook:
+	rm -rf `find $(distdir) -name .svn`
+
+## The sh script that does the conversion.
+web2c = $(SHELL) ./web2c-sh $@
+
+## We put this in the web2c directory because it runs on the build system, it
+## is separate from (and simpler than) the actual web-to-C conversion programs.
+makecpool = web2c/makecpool
+
+# Additional dependencies:
+web2c_common = web2c/convert web2c/common.defines
+# When cross-compiling, EXEEXT for the build and hosts system may differ.
+# Thus we depend on the auxiliary files web2c/stamp-*.
+web2c_stamps = web2c/stamp-fixwrites web2c/stamp-splitup web2c/stamp-web2c
+makecpool_stamp = web2c/stamp-makecpool
+web2c_depend = $(web2c_common) $(web2c_stamps) web2c-sh
+web2c_texmf = $(web2c_depend) web2c/texmf.defines web2c/coerce.h
+
+# This is right for most Web2C programs
+LDADD = $(proglib) $(KPATHSEA_LIBS)
+# Automake automatically uses $(proglib)=lib/lib.a as dependency.
+# This does not work for the configure substitution $(KPATHSEA_LIBS),
+# thus we must explicitly use these $(default_dependencies) for
+# programs that do not depend on tangle or ctangle.
+default_dependencies = $(proglib) $(KPATHSEA_DEPEND)
+
+# Rebuild Web2C programs
+web2c/stamp-fixwrites: $(web2c_common) ${srcdir}/web2c/*.[chly]
+	cd web2c && $(MAKE) $(AM_MAKEFLAGS) stamp-fixwrites
+	touch $@
+web2c/stamp-splitup: $(web2c_common) ${srcdir}/web2c/*.[chly]
+	cd web2c && $(MAKE) $(AM_MAKEFLAGS) stamp-splitup
+	touch $@
+web2c/stamp-web2c: $(web2c_common) ${srcdir}/web2c/*.[chly]
+	cd web2c && $(MAKE) $(AM_MAKEFLAGS) stamp-web2c
+	touch $@
+web2c/stamp-makecpool: $(web2c_common) ${srcdir}/web2c/makecpool.c
+	cd web2c && $(MAKE) $(AM_MAKEFLAGS) stamp-makecpool
+
+# Rebuild $(proglib)
+$(proglib): ${srcdir}/lib/*.c
+	cd lib && $(MAKE) $(AM_MAKEFLAGS) lib.a
+## Rebuild libkpathsea
+@KPATHSEA_RULE@
+## Rebuild libz
+@ZLIB_RULE@
+## Rebuild libpng
+@LIBPNG_RULE@
+## Rebuild libxpdf & Co
+@XPDF_RULE@
+## Rebuild libopenbsd-compat
+@OBSDCOMPAT_RULE@
+## Rebuild libzzip
+@ZZIPLIB_RULE@
+## Rebuild libgraphite
+@GRAPHITE_RULE@
+## Rebuild libfreetype
+@FREETYPE2_RULE@
+## Rebuild libTEXkit
+@TECKIT_RULE@
+## Rebuild libsicuxxx
+@ICU_RULE@
+
+# The environment for building.
+buildenv = TEXMFCNF=$(srcdir)/../kpathsea
+
+# Calling tangle & Co.
+tangle = WEBINPUTS=.:$(srcdir) $(buildenv) $(TANGLE)
+tangleboot = WEBINPUTS=.:$(srcdir) $(buildenv) $(TANGLEBOOT)
+otangle = WEBINPUTS=.:$(srcdir) $(buildenv) $(OTANGLE)
+ctangle = $(buildenv) $(CTANGLE)
+tie = WEBINPUTS=.:$(srcdir) $(buildenv) $(TIE)
+
+# Calling tangle & Co. via tangle-sh (several output files)
+texmf_tangle = WEBINPUTS=.:$(srcdir) $(SHELL) ./tangle-sh $@ $(TANGLE)
+o_tangle = WEBINPUTS=.:$(srcdir) $(SHELL) ./tangle-sh $@ $(OTANGLE)
+
+# For trip, trap, and other tests
+DIFF = diff
+DIFFFLAGS =
+TESTS_ENVIRONMENT = DIFF='$(DIFF)' DIFFFLAGS='$(DIFFFLAGS)' LN_S='$(LN_S)' KPSEWHICH='$(KPSEWHICH)'
+
+.PHONY: triptrap
+triptrap:
+	srcdir=$(srcdir) MAKE=$(MAKE) \
+	  $(SHELL) $(srcdir)/triptrap-sh $(TRIPTRAP)
+EXTRA_DIST += triptrap-sh
+
+# The environment for making dumps.
+# No need to specify TEXMF, as ../kpathsea/texmf.cnf should contain
+# suitable absolute paths at this point.  Those are converted to
+# SELFAUTO* paths on installation.
+dumpenv = TEXMFCNF=../kpathsea
+
+## ################################
+
+## Prevent Make from deleting the intermediate forms.
+.PRECIOUS: %.ch %.p %.c
+
+## ################################
+
+## tangle and ctangle
+include $(srcdir)/am/bootstrap.am
+
+## normal web programs (except tangle)
+include $(srcdir)/am/web.am
+
+## normal cweb programs (except ctangle)
+include $(srcdir)/am/cweb.am
+
+## TeX and MF
+include $(srcdir)/am/texmf.am
+
+## MetaPost
+include $(srcdir)/mplibdir/am/mplib.am
+
+## libmplib, used by MetaPost and luaTeX
+include $(srcdir)/mplibdir/am/libmplib.am
+
+## e-TeX
+include $(srcdir)/etexdir/am/etex.am
+
+## pTeX
+include $(srcdir)/ptexdir/am/ptex.am
+
+## pdfTeX
+include $(srcdir)/pdftexdir/am/pdftex.am
+include $(srcdir)/pdftexdir/am/libpdftex.am
+include $(srcdir)/pdftexdir/am/ttf2afm.am
+include $(srcdir)/pdftexdir/am/pdftosrc.am
+
+## luaTeX
+include $(srcdir)/luatexdir/am/luatex.am
+include $(srcdir)/luatexdir/am/liblua51.am
+include $(srcdir)/luatexdir/am/luasocket.am
+include $(srcdir)/luatexdir/am/luamisc.am
+include $(srcdir)/luatexdir/am/luafontforge.am
+include $(srcdir)/luatexdir/am/libluatex.am
+
+## XeTeX
+include $(srcdir)/xetexdir/am/xetex.am
+
+## omegaware web programs
+include $(srcdir)/omegaware/am/omegaware.am
+
+## programs required for 'make check' in omegafonts/ and omegaware/
+if OTANGLE
+check_PROGRAMS += pltotf tftopl
+endif OTANGLE
+
+## Aleph
+include $(srcdir)/alephdir/am/aleph.am
+
+## SyncTeX, must come after all TeX-like engines
+include $(srcdir)/synctexdir/am/synctex.am
+
+## libmd5
+include $(srcdir)/libmd5/am/md5.am
+
+## Eventually delete these files
+##
+EXTRA_DIST += Makefile.in.orig configure.in.orig
+

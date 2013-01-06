@@ -1,0 +1,194 @@
+## texk/web2c/synctexdir/am/synctex.am: Makefile fragment for SyncTeX.
+##
+## Copyright (C) 2009, 2010 Peter Breitenlohner <tex-live@tug.org>
+## You may freely use, modify and/or distribute this file.
+
+## The SyncTeX tool
+
+bin_PROGRAMS += synctex
+
+synctex_SOURCES = \
+	synctexdir/synctex_main.c \
+	synctexdir/synctex_parser.c \
+	synctexdir/synctex_parser.h \
+	synctexdir/synctex_parser_local.h \
+	synctexdir/synctex_parser_utils.h \
+	synctexdir/synctex_parser_utils.c
+
+synctex_CPPFLAGS = -I$(srcdir)/synctexdir $(ZLIB_INCLUDES) -DSYNCTEX_USE_LOCAL_HEADER
+synctex_CFLAGS = $(WARNING_CFLAGS)
+
+synctex_LDADD = $(ZLIB_LIBS)
+
+$(synctex_OBJECTS): $(ZLIB_DEPEND)
+
+dist_man_MANS += synctexdir/man1/synctex.1 synctexdir/man5/synctex.5
+
+EXTRA_DIST += \
+	synctexdir/ChangeLog \
+	synctexdir/README.txt \
+	synctexdir/synctex_parser_readme.txt \
+	synctexdir/synctex_parser_version.txt \
+	synctexdir/tests
+
+## SyncTeX infrastructure: common for all engines
+
+EXTRA_DIST += \
+	synctexdir/synctex-common.h \
+	synctexdir/synctex.c \
+	synctexdir/synctex.defines \
+	synctexdir/synctex.h
+
+## SyncTeX infrastructure: TeX
+
+if TEX_SYNCTEX
+
+tex_CPPFLAGS += -I$(srcdir)/synctexdir $(ZLIB_INCLUDES)
+
+tex_LDADD += $(ZLIB_LIBS)
+tex_prereq += $(ZLIB_DEPEND)
+
+tex_ch_synctex = \
+	synctexdir/synctex-mem.ch0 \
+	synctexdir/synctex-mem.ch1 \
+	synctexdir/synctex-mem.ch2 \
+	synctexdir/synctex-rec.ch0 \
+	synctexdir/synctex-rec.ch1 \
+	synctexdir/synctex-rec.ch2
+
+dist_tex_SOURCES = \
+	synctexdir/synctex.h \
+	synctexdir/synctex-common.h \
+	synctexdir/synctex-tex.h
+
+nodist_tex_SOURCES += \
+	synctex.c
+
+tex_CPPFLAGS += -D__SyncTeX__
+
+endif TEX_SYNCTEX
+
+synctex.c: texd.h synctexdir/synctex.c $(dist_tex_SOURCES)
+	sed s/TEX-OR-MF-OR-MP/tex/ $(srcdir)/synctexdir/synctex.c >$@
+
+EXTRA_DIST += \
+	synctexdir/synctex-mem.ch0 \
+	synctexdir/synctex-mem.ch1 \
+	synctexdir/synctex-mem.ch2 \
+	synctexdir/synctex-rec.ch0 \
+	synctexdir/synctex-rec.ch1 \
+	synctexdir/synctex-rec.ch2
+
+## SyncTeX infrastructure: e-TeX
+
+if ETEX_SYNCTEX
+
+etex_CPPFLAGS += -I$(srcdir)/synctexdir $(ZLIB_INCLUDES)
+
+etex_LDADD += $(ZLIB_LIBS)
+etex_prereq += $(ZLIB_DEPEND)
+
+etex_ch_synctex = \
+	synctexdir/synctex-mem.ch0 \
+	synctexdir/synctex-mem.ch1 \
+	synctexdir/synctex-e-mem.ch0 \
+	synctexdir/synctex-e-mem.ch1 \
+	synctexdir/synctex-rec.ch0 \
+	synctexdir/synctex-rec.ch1 \
+	synctexdir/synctex-e-rec.ch0 \
+	synctexdir/synctex-e-rec.ch1
+
+dist_etex_SOURCES = \
+	synctexdir/synctex.h \
+	synctexdir/synctex-common.h \
+	synctexdir/synctex-etex.h
+
+nodist_etex_SOURCES += \
+	synctex-e.c
+
+etex_CPPFLAGS += -D__SyncTeX__
+
+endif ETEX_SYNCTEX
+
+synctex-e.c: etexd.h synctexdir/synctex.c $(dist_etex_SOURCES)
+	sed s/TEX-OR-MF-OR-MP/etex/ $(srcdir)/synctexdir/synctex.c >$@
+
+EXTRA_DIST += \
+	synctexdir/synctex-e-mem.ch0 \
+	synctexdir/synctex-e-mem.ch1 \
+	synctexdir/synctex-e-rec.ch0 \
+	synctexdir/synctex-e-rec.ch1
+
+## SyncTeX infrastructure: pdfTeX
+
+if PDFTEX_SYNCTEX
+
+pdftex_CPPFLAGS += -I$(srcdir)/synctexdir
+
+pdftex_ch_synctex = \
+	synctexdir/synctex-mem.ch0 \
+	synctexdir/synctex-mem.ch1 \
+	synctexdir/synctex-e-mem.ch0 \
+	synctexdir/synctex-e-mem.ch1 \
+	synctexdir/synctex-rec.ch0 \
+	synctexdir/synctex-rec.ch1 \
+	synctexdir/synctex-e-rec.ch0 \
+	synctexdir/synctex-e-rec.ch1 \
+	synctexdir/synctex-pdf-rec.ch2
+
+dist_pdftex_SOURCES = \
+	synctexdir/synctex.h \
+	synctexdir/synctex-common.h \
+	synctexdir/synctex-pdftex.h
+
+nodist_pdftex_SOURCES += \
+	synctex-pdf.c
+
+pdftex_CPPFLAGS += -D__SyncTeX__
+
+endif PDFTEX_SYNCTEX
+
+synctex-pdf.c: pdftexd.h synctexdir/synctex.c $(dist_pdftex_SOURCES)
+	sed s/TEX-OR-MF-OR-MP/pdftex/ $(srcdir)/synctexdir/synctex.c >$@
+
+EXTRA_DIST += \
+	synctexdir/synctex-pdf-rec.ch2
+
+## SyncTeX infrastructure: XeTeX
+
+if XETEX_SYNCTEX
+
+xetex_CPPFLAGS += -I$(srcdir)/synctexdir
+
+xetex_ch_synctex = \
+	synctexdir/synctex-mem.ch0 \
+	synctexdir/synctex-e-mem.ch0 \
+	synctexdir/synctex-e-mem.ch1 \
+	synctexdir/synctex-xe-mem.ch2 \
+	synctexdir/synctex-rec.ch0 \
+	synctexdir/synctex-e-rec.ch0 \
+	synctexdir/synctex-xe-rec.ch2
+
+xetex_post_ch_synctex = \
+	synctexdir/synctex-xe-rec.ch3
+
+dist_xetex_SOURCES = \
+	synctexdir/synctex.h \
+	synctexdir/synctex-common.h \
+	synctexdir/synctex-xetex.h
+
+nodist_xetex_SOURCES += \
+	synctex-xe.c
+
+xetex_CPPFLAGS += -D__SyncTeX__
+
+endif XETEX_SYNCTEX
+
+synctex-xe.c: xetexd.h synctexdir/synctex.c $(dist_xetex_SOURCES)
+	sed s/TEX-OR-MF-OR-MP/xetex/ $(srcdir)/synctexdir/synctex.c >$@
+
+EXTRA_DIST += \
+	synctexdir/synctex-xe-mem.ch2 \
+	synctexdir/synctex-xe-rec.ch2 \
+	synctexdir/synctex-xe-rec.ch3
+

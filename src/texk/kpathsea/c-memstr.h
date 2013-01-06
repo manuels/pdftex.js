@@ -38,7 +38,7 @@
 
 /* Just to be complete, we make both the system V/ANSI and the BSD
    versions of the string functions available.  */
-#if !defined(HAVE_STRCHR) && !defined(strchr)
+/*#if !defined(HAVE_STRCHR) && !defined(strchr)
 #define strchr index
 #endif
 
@@ -52,11 +52,11 @@
 
 #if !defined(HAVE_MEMCPY) && !defined(memcpy)
 #define memcpy(to, from, len) bcopy ((from), (to), (len))
-#endif
+#endif*/
 
 /* Note that these functions should not be used. */
 #if !defined(HAVE_BCMP) && !defined(bcmp)
-#define bcmp(s1, s2, len) memcmp ((s1), (s2), (len))
+//#define bcmp(s1, s2, len) memcmp ((s1), (s2), (len))
 #endif
 
 #if !defined(HAVE_BCOPY) && !defined(bcopy)
@@ -64,7 +64,7 @@
 #endif
 
 #if !defined(HAVE_BZERO) && !defined(bzero)
-#define bzero(s, len) memset ((s), 0, (len))
+//#define bzero(s, len) memset ((s), 0, (len))
 #endif
 
 #if !defined(HAVE_INDEX) && !defined(index)

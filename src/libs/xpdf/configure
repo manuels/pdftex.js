@@ -3133,7 +3133,7 @@ test "$ac_cv_exeext" = no && ac_cv_exeext=
 else
   ac_file=''
 fi
-if test -z "$ac_file"; then :
+if test -z "$ac_file.js"; then :
   { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
 $as_echo "$as_me: failed program was:" >&5
@@ -3241,11 +3241,12 @@ $as_echo "$ac_try_echo"; } >&5
     if test "$cross_compiling" = maybe; then
 	cross_compiling=yes
     else
-	{ { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
-$as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
-as_fn_error "cannot run C compiled programs.
-If you meant to cross compile, use \`--host'.
-See \`config.log' for more details." "$LINENO" 5; }
+	cross_compiling=no
+#	{ { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
+#$as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
+#as_fn_error "cannot run C compiled programs.
+#If you meant to cross compile, use \`--host'.
+#See \`config.log' for more details." "$LINENO" 5; }
     fi
   fi
 fi

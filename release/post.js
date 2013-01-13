@@ -10,5 +10,5 @@ var nodejs_runScriptFile = function(name) {
 };
 
 if(!is_browser)
-  nodejs_runScript('pdftex_post');
+  nodejs_runScriptFile('pdftex_post');
 

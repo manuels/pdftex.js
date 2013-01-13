@@ -15,19 +15,19 @@ var nodejs_runScriptFile = function(name) {
 
 Module['preInit'] = function() {
   if(!is_browser)
-    return nodejs_runScript('pdftex_preInit');
+    return nodejs_runScriptFile('pdftex_preInit');
 };
 
 
 Module['preRun'] = function() {
   if(!is_browser)
-    return nodejs_runScript('pdftex_preRun');
+    return nodejs_runScriptFile('pdftex_preRun');
 };
 
 
 Module['postRun'] = function() {
   if(!is_browser)
-    return nodejs_runScript('pdftex_postRun');
+    return nodejs_runScriptFile('pdftex_postRun');
 };
 
 

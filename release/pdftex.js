@@ -1,4 +1,4 @@
-function(){
+(function(){
   window.PDFTeX = function() {
     var worker = new Worker('pdftex_webworker.js');
     var job_id = 0;

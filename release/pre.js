@@ -32,7 +32,7 @@ Module['postRun'] = function() {
 
 
 self.onmessage = function(ev) {
-  var msg = JSON.parse(ev.data);
+  var msg = ev.data;
   var res;
   try {
     eval(msg);

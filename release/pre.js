@@ -1,4 +1,4 @@
-var is_browser = (typeof(window) !== "undefined");
+var is_browser = (typeof(require) === "undefined");
 this['Module'] = {};
 var Module = this['Module'];
 Module['noInitialRun'] = is_browser;

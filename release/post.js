@@ -1,4 +1,4 @@
-var is_browser = (typeof(window) !== "undefined");
+var is_browser = (typeof(require) === "undefined");
 
 var nodejs_runScriptFile = function(name) {
   this['Module'] = Module;

@@ -5,6 +5,7 @@
     var pending_jobs = 0;
 
     worker.onmessage = function(ev) {
+      console.log('PDFTeX: received message from worker:', ev);
       console.log(JSON.parse(ev.data));
     };
 

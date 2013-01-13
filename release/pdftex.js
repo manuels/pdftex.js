@@ -1,6 +1,6 @@
 (function(){
   window.PDFTeX = function() {
-    var worker = new Worker('pdftex-webworker.js');
+    var worker = new Worker('pdftex.js/release/pdftex-webworker.js');
     var job_id = 0;
     var pending_jobs = 0;
 

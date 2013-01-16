@@ -1566,8 +1566,8 @@ static void t1_flush_cs(boolean is_subr)
             }
         }
         xfree(ptr->data);
-        if (ptr->name != notdef)
-            xfree(ptr->name);
+        /*if (ptr->name != notdef)
+            xfree(ptr->name); MANUEL*/
     }
     sprintf(t1_line_array, "%s", line_end);
     t1_line_ptr = eol(t1_line_array);

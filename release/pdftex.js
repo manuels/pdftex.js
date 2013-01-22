@@ -22,8 +22,8 @@ function(){
   };
 
 
-  window.PDFTeX = function() {
-    var worker = new Worker('pdftex.js/release/pdftex-webworker.js');
+  window.PDFTeX = function(root) {
+    var worker = new Worker(root+'pdftex.js/release/pdftex-webworker.js');
     var promises = [];
     var self = this;
 

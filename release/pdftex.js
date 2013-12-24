@@ -122,7 +122,7 @@ function(){
         worker.postMessage(JSON.stringify({
           cmd:         'run',
           id:          (promises.length-1),
-          args:        ['-no-mktex=tex', '-no-mktex=tfm', '-no-mktex=pk', '-output-format', 'pdf', '&latex', 'pdftex-input-file.tex']
+          args:        ['-no-mktex=tex', '-no-mktex=tfm', '-no-mktex=pk', '-interaction=nonstopmode', '-output-format', 'pdf', '&latex', 'pdftex-input-file.tex']
         }));
 
         prom3.then(function(obj) {prom2.fulfil(obj)});

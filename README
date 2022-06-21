@@ -1,4 +1,4 @@
 This is a javascript port of pdftex [1] with the aim to make latex work in the browser.
 
-[1] http://www.ctan.org/tex-archive/systems/pdftex
+[1] https://www.ctan.org/pkg/pdftex
 
